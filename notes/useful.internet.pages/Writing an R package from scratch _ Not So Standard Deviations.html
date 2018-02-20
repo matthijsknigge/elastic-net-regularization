@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/ -->
+<html lang="en"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width">
+<title>Writing an R package from scratch | Not So Standard Deviations</title>
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="stylesheet" type="text/css" media="all" href="./Writing an R package from scratch _ Not So Standard Deviations_files/style.css">
+<link rel="pingback" href="https://hilaryparker.com/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://s0.wp.com/wp-content/themes/pub/twentyeleven/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+		<script src="./Writing an R package from scratch _ Not So Standard Deviations_files/remote-login.php" type="text/javascript"></script>
+		<script type="text/javascript">
+		/* <![CDATA[ */
+			if ( 'function' === typeof WPRemoteLogin ) {
+				document.cookie = "wordpress_test_cookie=test; path=/";
+				if ( document.cookie.match( /(;|^)\s*wordpress_test_cookie\=/ ) ) {
+					WPRemoteLogin();
+				}
+			}
+		/* ]]> */
+		</script>
+		<link rel="dns-prefetch" href="https://s2.wp.com/">
+<link rel="dns-prefetch" href="https://s1.wp.com/">
+<link rel="dns-prefetch" href="https://s0.wp.com/">
+<link rel="dns-prefetch" href="https://hilaryparker.wordpress.com/">
+<link rel="alternate" type="application/rss+xml" title="Not So Standard Deviations » Feed" href="https://hilaryparker.com/feed/">
+<link rel="alternate" type="application/rss+xml" title="Not So Standard Deviations » Comments Feed" href="https://hilaryparker.com/comments/feed/">
+<link rel="alternate" type="application/rss+xml" title="Not So Standard Deviations » Writing an R package from scratch Comments Feed" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/feed/">
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s1.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1516999477h&ver=4.9.4"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./Writing an R package from scratch _ Not So Standard Deviations_files/wp-emoji-release.min.js" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="all-css-0-1" href="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource" type="text/css" media="all">
+<script type="text/javascript">
+/* <![CDATA[ */
+var related_posts_js_options = {"post_heading":"h4"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource(1)"></script>
+<link rel="stylesheet" id="all-css-0-2" href="./Writing an R package from scratch _ Not So Standard Deviations_files/style(1).css" type="text/css" media="all">
+<!--[if lt IE 8]>
+<link rel='stylesheet' id='highlander-comments-ie7-css'  href='https://s1.wp.com/wp-content/mu-plugins/highlander-comments/style-ie7.css?m=1351637563h&#038;ver=20110606' type='text/css' media='all' />
+<![endif]-->
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://hilaryparker.wordpress.com/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s1.wp.com/wp-includes/wlwmanifest.xml"> 
+<link rel="prev" title="I’m Dr. Hilary Parker!" href="https://hilaryparker.com/2013/05/15/im-dr-hilary-parker/">
+<link rel="next" title="Sunsets in Google Calendar using R" href="https://hilaryparker.com/2014/05/27/sunsets-in-google-calendar-using-r/">
+<meta name="generator" content="WordPress.com">
+<link rel="canonical" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/">
+<link rel="shortlink" href="https://wp.me/p2D9lZ-6k">
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F&amp;for=wpcom-auto-discovery"><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F&amp;for=wpcom-auto-discovery">
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="Writing an R package from scratch">
+<meta property="og:url" content="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/">
+<meta property="og:description" content="As I have worked on various projects at Etsy, I have accumulated a suite of functions that help me quickly produce tables and charts that I find useful. Because of the nature of iterative developme…">
+<meta property="article:published_time" content="2014-04-29T21:18:41+00:00">
+<meta property="article:modified_time" content="2014-04-30T20:49:44+00:00">
+<meta property="og:site_name" content="Not So Standard Deviations">
+<meta property="og:image" content="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=300">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:site" content="@wordpressdotcom">
+<meta name="twitter:text:title" content="Writing an R package from scratch">
+<meta name="twitter:image" content="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png?w=240">
+<meta name="twitter:card" content="summary">
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom">
+<link rel="shortcut icon" type="image/x-icon" href="https://secure.gravatar.com/blavatar/fb5233d1887cf3a08135084e24d8827f?s=32" sizes="16x16">
+<link rel="icon" type="image/x-icon" href="https://secure.gravatar.com/blavatar/fb5233d1887cf3a08135084e24d8827f?s=32" sizes="16x16">
+<link rel="apple-touch-icon-precomposed" href="https://secure.gravatar.com/blavatar/fb5233d1887cf3a08135084e24d8827f?s=114">
+<link rel="openid.server" href="https://hilaryparker.wordpress.com/?openidserver=1">
+<link rel="openid.delegate" href="https://hilaryparker.wordpress.com/">
+<link rel="search" type="application/opensearchdescription+xml" href="https://hilaryparker.com/osd.xml" title="Not So Standard Deviations">
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com">
+<meta name="theme-color" content="#BCBCBC">
+<style type="text/css">
+.widget_twitter li {
+	word-wrap: break-word;
+}
+</style>
+<meta name="application-name" content="Not So Standard Deviations"><meta name="msapplication-window" content="width=device-width;height=device-height"><meta name="msapplication-tooltip" content="A statistics (etc.) blog by Hilary Parker"><meta name="msapplication-task" content="name=Subscribe;action-uri=https://hilaryparker.com/feed/;icon-uri=https://secure.gravatar.com/blavatar/fb5233d1887cf3a08135084e24d8827f?s=16"><meta name="msapplication-task" content="name=Sign up for a free blog;action-uri=http://wordpress.com/signup/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Support;action-uri=http://support.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="msapplication-task" content="name=WordPress.com Forums;action-uri=http://forums.wordpress.com/;icon-uri=https://s2.wp.com/i/favicon.ico"><meta name="title" content="Writing an R package from scratch | Not So Standard Deviations on WordPress.com">
+<meta name="description" content="As I have worked on various projects at Etsy, I have accumulated a suite of functions that help me quickly produce tables and charts that I find useful. Because of the nature of iterative development, it often happens that I reuse the functions many times, mostly through the shameful method of copying the functions into…">
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #BCBCBC; }
+</style>
+<link rel="amphtml" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/amp/"><link rel="stylesheet" type="text/css" href="./Writing an R package from scratch _ Not So Standard Deviations_files/shCore.css"><link rel="stylesheet" type="text/css" href="./Writing an R package from scratch _ Not So Standard Deviations_files/shThemeDefault.css"><style type="text/css" id="syntaxhighlighteranchor"></style>
+<style type="text/css"></style><link rel="stylesheet" type="text/css" id="gravatar-card-css" href="./Writing an R package from scratch _ Not So Standard Deviations_files/hovercard.css"><link rel="stylesheet" type="text/css" id="gravatar-card-services-css" href="./Writing an R package from scratch _ Not So Standard Deviations_files/services.css"><script type="text/javascript" charset="utf-8" async="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/button.5f64a1a5864e1229f84c8defd65341b4.js"></script></head>
+
+<body class="post-template-default single single-post postid-392 single-format-standard custom-background mp6 customizer-styles-applied single-author singular highlander-enabled highlander-light">
+<div id="page" class="hfeed">
+	<header id="branding" role="banner">
+			<hgroup>
+				<h1 id="site-title"><span><a href="https://hilaryparker.com/" rel="home">Not So Standard Deviations</a></span></h1>
+				<h2 id="site-description">A statistics (etc.) blog by Hilary Parker</h2>
+			</hgroup>
+
+						<a href="https://hilaryparker.com/">
+									<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/cropped-img_20140902_1804591.jpg" width="180" height="200" alt="">
+							</a>
+			
+								<form method="get" id="searchform" action="https://hilaryparker.com/">
+		<label for="s" class="assistive-text">Search</label>
+		<input type="text" class="field" name="s" id="s" placeholder="Search">
+		<input type="submit" class="submit" name="submit" id="searchsubmit" value="Search">
+	</form>
+			
+			<nav id="access" role="navigation">
+				<h3 class="assistive-text">Main menu</h3>
+								<div class="skip-link"><a class="assistive-text" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#content">Skip to primary content</a></div>
+												<div class="menu-menu-container"><ul id="menu-menu" class="menu"><li id="menu-item-43" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-43"><a href="https://hilaryparker.com/about-hilary-parker/">About Me</a></li>
+<li id="menu-item-28" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-28"><a href="https://hilaryparker.com/contact-hilary-parker/">Contact</a></li>
+</ul></div>			</nav><!-- #access -->
+	</header><!-- #branding -->
+
+
+	<div id="main">
+
+		<div id="primary">
+			<div id="content" role="main">
+
+				
+					<nav id="nav-single">
+						<h3 class="assistive-text">Post navigation</h3>
+						<span class="nav-previous"><a href="https://hilaryparker.com/2013/05/15/im-dr-hilary-parker/" rel="prev"><span class="meta-nav">←</span> Previous</a></span>
+						<span class="nav-next"><a href="https://hilaryparker.com/2014/05/27/sunsets-in-google-calendar-using-r/" rel="next">Next <span class="meta-nav">→</span></a></span>
+					</nav><!-- #nav-single -->
+
+					
+<article id="post-392" class="post-392 post type-post status-publish format-standard hentry category-advice category-coding category-data-analysis tag-r tag-reproducibility">
+	<header class="entry-header">
+		<h1 class="entry-title">Writing an R package from&nbsp;scratch</h1>
+
+				<div class="entry-meta">
+						<span class="sep">Posted on </span><a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/" title="9:18 pm" rel="bookmark"><time class="entry-date" datetime="2014-04-29T21:18:41+00:00">April 29, 2014</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="https://hilaryparker.com/author/hilaryparker/" title="View all posts by hilaryparker" rel="author">hilaryparker</a></span></span>		</div><!-- .entry-meta -->
+			</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<p>As I have worked on various projects at Etsy, I have accumulated a suite of functions that help me quickly produce tables and charts that I find useful. Because of the nature of iterative development, it often happens that I reuse the functions many times, mostly through the shameful method of copying the functions into the project directory. I have been a fan of the idea of <a href="https://hilaryparker.com/2013/04/03/personal-r-packages/">personal R packages</a> for a while, but it always seemed like A Project That I Should Do Someday and someday never came. Until…</p>
+<p>Etsy has an amazing week called “<a href="https://twitter.com/Etsy/status/460840965411205120">hack week</a>” where we all get the opportunity to work on fun projects instead of our regular jobs. I sat down yesterday as part of Etsy’s hack week and decided “I am finally going to make that package I keep saying I am going to make.” It took me such little time that I was hit with that familiar feeling of the joy of optimization combined with the regret of past inefficiencies (joygret?). I wish I could go back in time and create the package the first moment I thought about it, and then use all the saved time to watch cat videos because that really would have been more productive.</p>
+<p>This tutorial is not about making a beautiful, perfect R package. This tutorial is about creating a bare-minimum R package so that you don’t have to keep thinking to yourself, “I really should just make an R package with these functions so I don’t have to keep copy/pasting them like a goddamn luddite.” Seriously, it doesn’t have to be about sharing your code (although that is an added benefit!). It is about saving yourself time. (n.b. this is my attitude about all reproducibility.)</p>
+<p>(For more details, I recommend <a href="http://adv-r.had.co.nz/Package-basics.html">this chapter</a>&nbsp;in Hadley Wickham’s <em>Advanced R Programming</em> book.)</p>
+<p><strong>Step 0: Packages you will need</strong><br>
+The packages you will need to create a package are <code>devtools</code> and <code>roxygen2</code>. I am having you download the development version of the <code>roxygen2</code> package.</p>
+<div><div id="highlighter_434122" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r functions">install.packages</code><code class="r plain">(</code><code class="r string">"devtools"</code><code class="r plain">)</code></div><div class="line number2 index1 alt1"><code class="r functions">library</code><code class="r plain">(</code><code class="r string">"devtools"</code><code class="r plain">)</code></div><div class="line number3 index2 alt2"><code class="r plain">devtools::</code><code class="r functions">install_github</code><code class="r plain">(</code><code class="r string">"klutometis/roxygen"</code><code class="r plain">)</code></div><div class="line number4 index3 alt1"><code class="r functions">library</code><code class="r plain">(roxygen2)</code></div></div></td></tr></tbody></table></div></div>
+<p><strong>Step 1: Create your package directory</strong><br>
+You are going to create a directory&nbsp;with the bare minimum folders of R packages. I am going to make a cat-themed package as an illustration.</p>
+<div><div id="highlighter_809092" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r functions">setwd</code><code class="r plain">(</code><code class="r string">"parent_directory"</code><code class="r plain">)</code></div><div class="line number2 index1 alt1"><code class="r functions">create</code><code class="r plain">(</code><code class="r string">"cats"</code><code class="r plain">)</code></div></div></td></tr></tbody></table></div></div>
+<p>If you look in your parent directory, you will now have a folder called cats, and in it you will have two folders and one file called <code>DESCRIPTION</code>.</p>
+<p><a href="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png"><img data-attachment-id="434" data-permalink="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/screen-shot-2014-04-29-at-4-26-23-pm/" data-orig-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png" data-orig-size="352,128" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="Screen Shot 2014-04-29 at 4.26.23 PM" data-image-description="" data-medium-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png?w=300&amp;h=109" data-large-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png?w=352" class="aligncenter wp-image-434 size-medium" src="./Writing an R package from scratch _ Not So Standard Deviations_files/screen-shot-2014-04-29-at-4-26-23-pm.png" alt="Screen Shot 2014-04-29 at 4.26.23 PM" width="300" height="109" srcset="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png?w=300&amp;h=109 300w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png?w=150&amp;h=55 150w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-26-23-pm.png 352w" sizes="(max-width: 300px) 100vw, 300px"></a></p>
+<p>You should edit the <code>DESCRIPTION</code> file to include all of your contact information, etc.</p>
+<p><strong>Step 2: Add functions</strong><br>
+If you’re reading this, you probably have functions that you’ve been meaning to create a package for. Copy those into your R folder. If you don’t, may I suggest something along the lines of:</p>
+<div><div id="highlighter_864914" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r plain">cat_function &lt;- </code><code class="r keyword">function</code><code class="r plain">(love=</code><code class="r keyword">TRUE</code><code class="r plain">){</code></div><div class="line number2 index1 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r keyword">if</code><code class="r plain">(love==</code><code class="r keyword">TRUE</code><code class="r plain">){</code></div><div class="line number3 index2 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r functions">print</code><code class="r plain">(</code><code class="r string">"I love cats!"</code><code class="r plain">)</code></div><div class="line number4 index3 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r plain">}</code></div><div class="line number5 index4 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r keyword">else</code> <code class="r plain">{</code></div><div class="line number6 index5 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r functions">print</code><code class="r plain">(</code><code class="r string">"I am not a cool person."</code><code class="r plain">)</code></div><div class="line number7 index6 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r plain">}</code></div><div class="line number8 index7 alt1"><code class="r plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>Save this as a <code>cat_function.R</code> to your R directory.</p>
+<p><a href="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png"><img data-attachment-id="435" data-permalink="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/screen-shot-2014-04-29-at-4-28-01-pm/" data-orig-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png" data-orig-size="386,200" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="Screen Shot 2014-04-29 at 4.28.01 PM" data-image-description="" data-medium-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png?w=300&amp;h=155" data-large-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png?w=386" class="aligncenter wp-image-435 size-medium" src="./Writing an R package from scratch _ Not So Standard Deviations_files/screen-shot-2014-04-29-at-4-28-01-pm.png" alt="Screen Shot 2014-04-29 at 4.28.01 PM" width="300" height="155" srcset="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png?w=300&amp;h=155 300w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png?w=150&amp;h=78 150w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-28-01-pm.png 386w" sizes="(max-width: 300px) 100vw, 300px"></a></p>
+<p>(<code>cats-package.r</code> is auto-generated when you create the package.)</p>
+<p><strong>Step 3: Add documentation</strong><br>
+This always seemed like the most intimidating step to me. I’m here to tell you — it’s super quick. The package&nbsp;<code>roxygen2</code> that makes everything amazing and simple. The way it works is that you add special comments to the beginning of each function, that will later be compiled into the correct format for package documentation. The details can be found in the <a href="https://github.com/klutometis/roxygen#roxygen2"><code>roxygen2</code> documentation</a> — I will just provide an example for our cat function.</p>
+<p>The comments you need to add at the beginning of the cat function are, for example, as follows:</p>
+<div><div id="highlighter_558074" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div><div class="line number5 index4 alt2">5</div><div class="line number6 index5 alt1">6</div><div class="line number7 index6 alt2">7</div><div class="line number8 index7 alt1">8</div><div class="line number9 index8 alt2">9</div><div class="line number10 index9 alt1">10</div><div class="line number11 index10 alt2">11</div><div class="line number12 index11 alt1">12</div><div class="line number13 index12 alt2">13</div><div class="line number14 index13 alt1">14</div><div class="line number15 index14 alt2">15</div><div class="line number16 index15 alt1">16</div><div class="line number17 index16 alt2">17</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r comments">#' A Cat Function</code></div><div class="line number2 index1 alt1"><code class="r comments">#'</code></div><div class="line number3 index2 alt2"><code class="r comments">#' This function allows you to express your love of cats.</code></div><div class="line number4 index3 alt1"><code class="r comments">#' @param love Do you love cats? Defaults to TRUE.</code></div><div class="line number5 index4 alt2"><code class="r comments">#' @keywords cats</code></div><div class="line number6 index5 alt1"><code class="r comments">#' @export</code></div><div class="line number7 index6 alt2"><code class="r comments">#' @examples</code></div><div class="line number8 index7 alt1"><code class="r comments">#' cat_function()</code></div><div class="line number9 index8 alt2">&nbsp;</div><div class="line number10 index9 alt1"><code class="r plain">cat_function &lt;- </code><code class="r functions">function</code><code class="r plain">(love=</code><code class="r keyword">TRUE</code><code class="r plain">){</code></div><div class="line number11 index10 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r functions">if</code><code class="r plain">(love==</code><code class="r keyword">TRUE</code><code class="r plain">){</code></div><div class="line number12 index11 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r functions">print</code><code class="r plain">(</code><code class="r string">"I love cats!"</code><code class="r plain">)</code></div><div class="line number13 index12 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r plain">}</code></div><div class="line number14 index13 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r keyword">else</code> <code class="r plain">{</code></div><div class="line number15 index14 alt2"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r functions">print</code><code class="r plain">(</code><code class="r string">"I am not a cool person."</code><code class="r plain">)</code></div><div class="line number16 index15 alt1"><code class="r spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code class="r plain">}</code></div><div class="line number17 index16 alt2"><code class="r plain">}</code></div></div></td></tr></tbody></table></div></div>
+<p>I’m personally a fan of creating a new file for each function, but if you’d rather you can simply create new functions sequentially in one file — just make sure&nbsp;to add the documentation comments before each function.</p>
+<p><strong>Step 4: Process your documentation</strong><br>
+Now you need to create the documentation from your annotations earlier. You’ve already done the “hard” work in Step 3. Step 4 is as easy doing this:</p>
+<div><div id="highlighter_400664" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r functions">setwd</code><code class="r plain">(</code><code class="r string">"./cats"</code><code class="r plain">)</code></div><div class="line number2 index1 alt1"><code class="r functions">document</code><code class="r plain">()</code></div></div></td></tr></tbody></table></div></div>
+<p>This automatically adds in the <code>.Rd</code> files to the <code>man</code> directory, and adds a <code>NAMESPACE</code> file to the main directory. You can <a href="http://adv-r.had.co.nz/Package-basics.html">read up more</a> about these, but in terms of steps you need to take, you really don’t have to do anything further.</p>
+<p><a href="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png"><img data-attachment-id="437" data-permalink="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/screen-shot-2014-04-29-at-4-33-58-pm/" data-orig-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png" data-orig-size="384,316" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="Screen Shot 2014-04-29 at 4.33.58 PM" data-image-description="" data-medium-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png?w=300&amp;h=246" data-large-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png?w=384" class="aligncenter wp-image-437 size-medium" src="./Writing an R package from scratch _ Not So Standard Deviations_files/screen-shot-2014-04-29-at-4-33-58-pm.png" alt="Screen Shot 2014-04-29 at 4.33.58 PM" width="300" height="246" srcset="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png?w=300&amp;h=246 300w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png?w=150&amp;h=123 150w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-4-33-58-pm.png 384w" sizes="(max-width: 300px) 100vw, 300px"></a></p>
+<p>(Yes I know my icons are inconsistent. Yes I tried to fix that.)</p>
+<p><strong>Step 5: Install!</strong><br>
+Now it is as simple as installing the package! You need to run this from the parent working directory that contains the <code>cats</code> folder.</p>
+<div><div id="highlighter_653798" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r functions">setwd</code><code class="r plain">(</code><code class="r string">".."</code><code class="r plain">)</code></div><div class="line number2 index1 alt1"><code class="r functions">install</code><code class="r plain">(</code><code class="r string">"cats"</code><code class="r plain">)</code></div></div></td></tr></tbody></table></div></div>
+<p>Now you have a real, live, functioning R package. For example, try typing <code>?cat_function</code>. You should see the standard help page pop up!</p>
+<p><a href="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png"><img data-attachment-id="443" data-permalink="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/screen-shot-2014-04-29-at-5-04-55-pm/" data-orig-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png" data-orig-size="1004,764" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;}" data-image-title="Screen Shot 2014-04-29 at 5.04.55 PM" data-image-description="" data-medium-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=300&amp;h=228" data-large-file="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=628" class="aligncenter wp-image-443 size-medium" src="./Writing an R package from scratch _ Not So Standard Deviations_files/screen-shot-2014-04-29-at-5-04-55-pm.png" alt="Screen Shot 2014-04-29 at 5.04.55 PM" width="300" height="228" srcset="https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=300&amp;h=228 300w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=600&amp;h=456 600w, https://hilaryparker.files.wordpress.com/2014/04/screen-shot-2014-04-29-at-5-04-55-pm.png?w=150&amp;h=114 150w" sizes="(max-width: 300px) 100vw, 300px"></a></p>
+<p><strong>(Bonus) Step 6:&nbsp;Make the package a GitHub repo</strong><br>
+This isn’t a post about learning to use git and GitHub — for that I recommend Karl Broman’s <a href="http://kbroman.github.io/github_tutorial/">Git/GitHub Guide</a>. The benefit, however, to putting your package onto GitHub is that you can use the <code>devtools install_github()</code> function to install your new package directly from the GitHub page.</p>
+<div><div id="highlighter_740189" class="syntaxhighlighter  r"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="r functions">install_github</code><code class="r plain">(</code><code class="r string">'cats'</code><code class="r plain">,</code><code class="r string">'github_username'</code><code class="r plain">)</code></div></div></td></tr></tbody></table></div></div>
+<p><strong>Step 7-infinity: Iterate</strong><br>
+This is where the benefit of having the package pulled together really helps. You can flesh out the documentation as you use and share the package. You can add new functions the moment you write them, rather than waiting to see if you’ll reuse them. You can divide up the functions into new packages. The possibilities are endless!</p>
+<p>Additional pontifications: If I have learned anything from my (amazing and eye-opening) first year at Etsy, it’s that the best products are built in small steps, not by waiting for a perfect final product to be created. This concept is called the <a href="http://en.wikipedia.org/wiki/Minimum_viable_product">minimum viable product</a> — it’s best to get a project started and improve it through iteration. R packages can seem like a big, intimidating feat, and they really shouldn’t be. The minimum viable R package is a package with just one function!</p>
+<p>Additional side-notes: I learned basically all of these tricks at the <a href="http://ropensci.github.io/hackathon/">rOpenSci hackathon</a>. My academic sister <a href="http://alyssafrazee.com/">Alyssa</a> wrote a <a href="http://simplystatistics.org/2014/04/10/the-ropensci-hackathon-ropenhack/">blog post</a> describing how great it was.&nbsp;Hadley Wickham gets full credit for <a href="http://adv-r.had.co.nz/Philosophy.html">envisioning that R packages should be the easiest way to share code</a>, and making functions/resources that make it so easy to do so.</p>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow" data-shared="sharing-twitter-392" class="share-twitter sd-button share-icon" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?share=twitter&amp;nb=1" target="_blank" title="Click to share on Twitter"><span>Twitter</span></a></li><li class="share-facebook"><a rel="nofollow" data-shared="sharing-facebook-392" class="share-facebook sd-button share-icon" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?share=facebook&amp;nb=1" target="_blank" title="Share on Facebook"><span>Facebook<span class="share-count">143</span></span></a></li><li class="share-end"></li></ul></div></div></div><div class="sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-loaded" id="like-post-wrapper-38883423-392-5a82aff7ede88" data-src="//widgets.wp.com/likes/index.html?ver=20180212#blog_id=38883423&amp;post_id=392&amp;origin=hilaryparker.wordpress.com&amp;obj_id=38883423-392-5a82aff7ede88" data-name="like-post-frame-38883423-392-5a82aff7ede88"><h3 class="sd-title">Like this:</h3><div class="likes-widget-placeholder post-likes-widget-placeholder" style="height: 55px; display: none;"><span class="button"><span>Like</span></span> <span class="loading">Loading...</span></div><iframe class="post-likes-widget jetpack-likes-widget" name="like-post-frame-38883423-392-5a82aff7ede88" height="55px" width="100%" frameborder="0" src="./Writing an R package from scratch _ Not So Standard Deviations_files/index.html"></iframe><span class="sd-text-color"></span><a class="sd-link-color"></a></div>
+<div id="jp-relatedposts" class="jp-relatedposts" style="display: block;">
+	<h3 class="jp-relatedposts-headline"><em>Related</em></h3>
+<div class="jp-relatedposts-items jp-relatedposts-items-minimal"><p class="jp-relatedposts-post jp-relatedposts-post0" data-post-id="455" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://hilaryparker.com/2014/05/27/sunsets-in-google-calendar-using-r/" title="Sunsets in Google Calendar using R
+
+I live (and work!) near one of the most beautiful vantage points for sunsets in possibly the entire US. However almost every beautiful sunset I have seen from there has come from either 1) me walking out of work and noticing that the sky is bright pink, or 2) seeing…" rel="nofollow" data-origin="392" data-position="0">Sunsets in Google Calendar using R</a></span><span class="jp-relatedposts-post-context">In "Coding Project"</span></p><p class="jp-relatedposts-post jp-relatedposts-post1" data-post-id="376" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://hilaryparker.com/2013/04/03/personal-r-packages/" title="Personal R Packages
+
+I came across this R package on GitHub, and it made me so excited that I decided to write a post about it. It&#39;s a compilation by Karl Broman of various R functions that he&#39;s found helpful to write throughout the years. Wouldn&#39;t it be great if incoming graduate students…" rel="nofollow" data-origin="392" data-position="1">Personal R Packages</a></span><span class="jp-relatedposts-post-context">In "Advice"</span></p><p class="jp-relatedposts-post jp-relatedposts-post2" data-post-id="239" data-post-format="false"><span class="jp-relatedposts-post-title"><a class="jp-relatedposts-post-a" href="https://hilaryparker.com/2013/01/30/hilary-the-most-poisoned-baby-name-in-us-history/" title="Hilary: the most poisoned baby name in US history
+
+I&#39;ve always had a special fondness for my name, which -- according to Ryan Gosling in &quot;Lars and the Real Girl&quot; -- is a scientific fact for most people (Ryan Gosling constitutes scientific proof in my book). Plus, the root word for Hilary is the Latin word &quot;hilarius&quot; meaning cheerful…" rel="nofollow" data-origin="392" data-position="2">Hilary: the most poisoned baby name in US history</a></span><span class="jp-relatedposts-post-context">In "Coding Project"</span></p></div></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		This entry was posted in <a href="https://hilaryparker.com/category/advice/" rel="category tag">Advice</a>, <a href="https://hilaryparker.com/category/advice/coding/" rel="category tag">Coding</a>, <a href="https://hilaryparker.com/category/data-analysis/" rel="category tag">Data Analysis</a> and tagged <a href="https://hilaryparker.com/tag/r/" rel="tag">R</a>, <a href="https://hilaryparker.com/tag/reproducibility/" rel="tag">reproducibility</a> by <a href="https://hilaryparker.com/author/hilaryparker/">hilaryparker</a>. Bookmark the <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/" title="Permalink to Writing an R package from scratch" rel="bookmark">permalink</a>.		
+			</footer><!-- .entry-meta -->
+</article><!-- #post-392 -->
+
+						<div id="comments">
+	
+	
+			<h2 id="comments-title">
+			134 thoughts on “<span>Writing an R package from&nbsp;scratch</span>”		</h2>
+
+				<nav id="comment-nav-above">
+			<h1 class="assistive-text">Comment navigation</h1>
+			<div class="nav-previous"><a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-2/#comments">← Older Comments</a></div>
+			<div class="nav-next"></div>
+		</nav>
+		
+		<ol class="commentlist">
+				<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-7356">
+		<article id="comment-7356" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/59bb043810ee72608c62ee69fc2818b8" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-59bb043810ee72608c62ee69fc2818b8-0"><span class="fn"><a href="http://www.natereed.com/" rel="external nofollow" class="url">Nate Reed</a></span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7356"><time datetime="2016-08-30T16:02:12+00:00">August 30, 2016 at 4:02 pm</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>This is really nice… A lot easier to read than the CRAN PDF.</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7356#respond" onclick="return addComment.moveForm( &quot;comment-7356&quot;, &quot;7356&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Nate Reed">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-7365">
+		<article id="comment-7365" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/7a8c93aa1d4eb3cbdc4457d3797a35ac" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-7a8c93aa1d4eb3cbdc4457d3797a35ac-0"><span class="fn">Lin</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7365"><time datetime="2016-09-07T08:24:51+00:00">September 7, 2016 at 8:24 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>This is really useful. I’m starting to write my first package in R. Thank you for pointing me in the right direction!</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7365#respond" onclick="return addComment.moveForm( &quot;comment-7365&quot;, &quot;7365&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Lin">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="https://datawarrior.wordpress.com/2016/09/08/developing-r-packages/" rel="external nofollow" class="url">Developing R Packages – Everything about Data Analytics</a></p>
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="https://datawarrior.wordpress.com/2016/09/10/rjava-running-java-from-r-and-building-r-packages-wrapping-a-jar/" rel="external nofollow" class="url">rJava: Running Java from R, and Building R Packages Wrapping a .jar – Everything about Data Analytics</a></p>
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="http://www.popit.kr/recycled-r/" rel="external nofollow" class="url">Recycled R - 패키지를 만들자 | Popit</a></p>
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-7399">
+		<article id="comment-7399" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/929782a1dc674085d66a4335801acd2a" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-929782a1dc674085d66a4335801acd2a-0"><span class="fn">Phil</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7399"><time datetime="2016-09-28T06:55:06+00:00">September 28, 2016 at 6:55 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Great intro, simple and straight to the point!</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7399#respond" onclick="return addComment.moveForm( &quot;comment-7399&quot;, &quot;7399&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Phil">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-7441">
+		<article id="comment-7441" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/picture" class="avatar avatar-68" height="68" width="68"><span class="fn"><a href="https://www.facebook.com/app_scoped_user_id/2237697/" rel="external nofollow" class="url">Michael Cohn</a></span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7441"><time datetime="2016-10-27T00:09:46+00:00">October 27, 2016 at 12:09 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Thank you! This was just the level of detail I needed to get started.</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7441#respond" onclick="return addComment.moveForm( &quot;comment-7441&quot;, &quot;7441&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Michael Cohn">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-7457">
+		<article id="comment-7457" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/6b08f35734663bd6ad3128c879d074fd" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-6b08f35734663bd6ad3128c879d074fd-0"><span class="fn">Nick Keramaris</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7457"><time datetime="2016-11-10T17:09:38+00:00">November 10, 2016 at 5:09 pm</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Very helpful! You have my meow eternal gratitude.</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7457#respond" onclick="return addComment.moveForm( &quot;comment-7457&quot;, &quot;7457&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Nick Keramaris">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment byuser comment-author-sscogges odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-7466">
+		<article id="comment-7466" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/e2e9dd2f71ef63634270c8ffcab889bd" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-e2e9dd2f71ef63634270c8ffcab889bd-0"><span class="fn">sscogges</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7466"><time datetime="2016-11-19T00:48:09+00:00">November 19, 2016 at 12:48 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Great post! Thanks for taking the time to write this up <img draggable="false" class="emoji" alt="🙂" src="./Writing an R package from scratch _ Not So Standard Deviations_files/1f642.svg"></p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7466#respond" onclick="return addComment.moveForm( &quot;comment-7466&quot;, &quot;7466&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to sscogges">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment byuser comment-author-dustinvanstee even thread-even depth-1 highlander-comment" id="li-comment-7476">
+		<article id="comment-7476" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/562fa5cb7a89ff596cbea9a9549fa9b1" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-562fa5cb7a89ff596cbea9a9549fa9b1-0"><span class="fn"><a href="http://dustinvanstee.wordpress.com/" rel="external nofollow" class="url">dustinvanstee</a></span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7476"><time datetime="2016-11-23T13:16:16+00:00">November 23, 2016 at 1:16 pm</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>very useful, thanks for the post!</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7476#respond" onclick="return addComment.moveForm( &quot;comment-7476&quot;, &quot;7476&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to dustinvanstee">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-7477">
+		<article id="comment-7477" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/797e7184afebad8351643acbb9959c5c" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-797e7184afebad8351643acbb9959c5c-0"><span class="fn">James Lankford</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7477"><time datetime="2016-11-24T09:35:18+00:00">November 24, 2016 at 9:35 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>nice, thanks<br>
+but first I had to install Rtools and then a package named magrittr (have no idea what that is)<br>
+now to get started</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7477#respond" onclick="return addComment.moveForm( &quot;comment-7477&quot;, &quot;7477&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to James Lankford">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment even thread-even depth-1 highlander-comment" id="li-comment-7487">
+		<article id="comment-7487" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/6d1e4a6b863912c9d810d80836511a55" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-6d1e4a6b863912c9d810d80836511a55-0"><span class="fn"><a href="https://github.com/ChrisMuir" rel="external nofollow" class="url">Chris Muir</a></span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7487"><time datetime="2016-11-29T02:40:09+00:00">November 29, 2016 at 2:40 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Working thru learning R package building for work, this was the perfect tutorial to get me started. Thanks for putting this together Hilary!</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7487#respond" onclick="return addComment.moveForm( &quot;comment-7487&quot;, &quot;7487&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Chris Muir">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-odd thread-alt depth-1 highlander-comment" id="li-comment-7488">
+		<article id="comment-7488" class="comment">
+			<footer class="comment-meta">
+				<div class="comment-author vcard">
+					<img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/9989236bda812cc6db31d93613213b9c" class="avatar avatar-68 grav-hashed grav-hijack" height="68" width="68" id="grav-9989236bda812cc6db31d93613213b9c-0"><span class="fn">Radek</span> on <a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-3/#comment-7488"><time datetime="2016-11-29T11:05:26+00:00">November 29, 2016 at 11:05 am</time></a> <span class="says">said:</span>
+									</div><!-- .comment-author .vcard -->
+
+				
+			</footer>
+
+			<div class="comment-content"><p>Thank you, crystal clear and entertaining. Now I am really going to make that package I keep saying I am going to make. Love cats too, by the way.</p>
+</div>
+
+			<div class="reply">
+				<a rel="nofollow" class="comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/?replytocom=7488#respond" onclick="return addComment.moveForm( &quot;comment-7488&quot;, &quot;7488&quot;, &quot;respond&quot;, &quot;392&quot; )" aria-label="Reply to Radek">Reply <span>↓</span></a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+		</ol>
+
+				<nav id="comment-nav-below">
+			<h1 class="assistive-text">Comment navigation</h1>
+			<div class="nav-previous"><a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/comment-page-2/#comments">← Older Comments</a></div>
+			<div class="nav-next"></div>
+		</nav>
+		
+		
+	
+		<div id="respond" class="comment-respond js">
+		<h3 id="reply-title" class="comment-reply-title">Comment Away! <small><a rel="nofollow" id="cancel-comment-reply-link" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#respond" style="display:none;">Cancel reply</a></small></h3>			<form action="https://hilaryparker.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+				<input type="hidden" id="highlander_comment_nonce" name="highlander_comment_nonce" value="bd9deb7f72"><input type="hidden" name="_wp_http_referer" value="/2014/04/29/writing-an-r-package-from-scratch/">
+<input type="hidden" name="hc_post_as" id="hc_post_as" value="guest">
+
+<div class="comment-form-field comment-textarea">
+	
+	<div id="comment-form-comment"><textarea tabindex="-1" style="position: absolute; top: -999px; left: 0px; right: auto; bottom: auto; border: 0px; padding: 0px; box-sizing: content-box; word-wrap: break-word; overflow: hidden; transition: none; height: 0px !important; min-height: 0px !important; font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif; font-size: 14px; font-weight: 300; font-style: normal; letter-spacing: 0px; text-transform: none; text-decoration: none solid rgba(0, 0, 0, 0.7); word-spacing: 0px; text-indent: 80px; line-height: 22.75px; width: 533px;" class="autosizejs "></textarea><textarea id="comment" name="comment" title="Enter your comment here..." placeholder="Enter your comment here..." style="height: 42px; overflow: hidden; word-wrap: break-word; resize: none;"></textarea></div>
+</div>
+
+<div id="comment-form-identity" style="display: none;">
+
+	<div id="comment-form-nascar">
+		<p>Fill in your details below or click an icon to log in:</p>
+		<ul>
+			<li class="selected" style="display:none;">
+				<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#comment-form-guest" id="postas-guest" title="Guest">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#comment-form-load-service:WordPress.com" id="postas-wordpress" title="WordPress.com">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#comment-form-load-service:Twitter" id="postas-twitter" title="Twitter">
+					<span></span>
+				</a>
+			</li>
+			<li>
+				<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#comment-form-load-service:Facebook" id="postas-facebook" title="Facebook">
+					<span></span>
+				</a>
+			</li>
+			<li>
+		</li></ul>
+	</div>
+
+	<div id="comment-form-guest" class="comment-form-service selected">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+<a href="https://gravatar.com/site/signup/" target="_blank">				<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/ad516503a11cd5ca435acc9bb6523536" alt="Gravatar" width="25" class="no-grav">
+</a>			</div>
+
+				<div class="comment-form-fields">
+				<div class="comment-form-field comment-form-email">
+					<label for="email">Email <span class="required">(required)</span> <span class="nopublish">(Address never made public)</span></label>
+					<div class="comment-form-input"><input id="email" name="email" type="email" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-author">
+					<label for="author">Name <span class="required">(required)</span></label>
+					<div class="comment-form-input"><input id="author" name="author" type="text" value=""></div>
+				</div>
+				<div class="comment-form-field comment-form-url">
+					<label for="url">Website</label>
+					<div class="comment-form-input"><input id="url" name="url" type="url" value=""></div>
+				</div>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-wordpress" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/ad516503a11cd5ca435acc9bb6523536" alt="WordPress.com Logo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="wp_avatar" id="wordpress-avatar" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_user_id" id="wordpress-user_id" class="comment-meta-wordpress" value="">
+				<input type="hidden" name="wp_access_token" id="wordpress-access_token" class="comment-meta-wordpress" value="">
+				<p class="comment-form-posting-as pa-wordpress"><strong></strong> You are commenting using your WordPress.com account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;wordpress&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-twitter" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/ad516503a11cd5ca435acc9bb6523536" alt="Twitter picture" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="twitter_avatar" id="twitter-avatar" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_user_id" id="twitter-user_id" class="comment-meta-twitter" value="">
+				<input type="hidden" name="twitter_access_token" id="twitter-access_token" class="comment-meta-twitter" value="">
+				<p class="comment-form-posting-as pa-twitter"><strong></strong> You are commenting using your Twitter account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;twitter&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-facebook" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/ad516503a11cd5ca435acc9bb6523536" alt="Facebook photo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="fb_avatar" id="facebook-avatar" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_user_id" id="facebook-user_id" class="comment-meta-facebook" value="">
+				<input type="hidden" name="fb_access_token" id="facebook-access_token" class="comment-meta-facebook" value="">
+				<p class="comment-form-posting-as pa-facebook"><strong></strong> You are commenting using your Facebook account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;facebook&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+	<div id="comment-form-googleplus" class="comment-form-service">
+		<div class="comment-form-padder">
+			<div class="comment-form-avatar">
+				<img src="./Writing an R package from scratch _ Not So Standard Deviations_files/ad516503a11cd5ca435acc9bb6523536" alt="Google+ photo" width="25" class="no-grav">
+			</div>
+
+				<div class="comment-form-fields">
+				<input type="hidden" name="googleplus_avatar" id="googleplus-avatar" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_user_id" id="googleplus-user_id" class="comment-meta-googleplus" value="">
+				<input type="hidden" name="googleplus_access_token" id="googleplus-access_token" class="comment-meta-googleplus" value="">
+				<p class="comment-form-posting-as pa-googleplus"><strong></strong> You are commenting using your Google+ account. <span class="comment-form-log-out">(&nbsp;<a href="javascript:HighlanderComments.doExternalLogout( &#39;googleplus&#39; );">Log&nbsp;Out</a>&nbsp;/&nbsp;<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" onclick="javascript:HighlanderComments.switchAccount();return false;">Change</a>&nbsp;)</span></p>
+			</div>
+	
+		</div>
+	</div>
+
+
+	<div id="comment-form-load-service" class="comment-form-service">
+		<div class="comment-form-posting-as-cancel"><a href="javascript:HighlanderComments.cancelExternalWindow();">Cancel</a></div>
+		<p>Connecting to %s</p>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+var highlander_expando_javascript = function(){
+	var input = document.createElement( 'input' ),
+	    comment = jQuery( '#comment' );
+
+	if ( 'placeholder' in input ) {
+		comment.attr( 'placeholder', jQuery( '.comment-textarea label' ).remove().text() );
+	}
+
+	// Expando Mode: start small, then auto-resize on first click + text length
+	jQuery( '#comment-form-identity' ).hide();
+	jQuery( '#comment-form-subscribe' ).hide();
+	jQuery( '#commentform .form-submit' ).hide();
+
+	comment.css( { 'height':'10px' } ).one( 'focus', function() {
+		var timer = setInterval( HighlanderComments.resizeCallback, 10 )
+		jQuery( this ).animate( { 'height': HighlanderComments.initialHeight } ).delay( 100 ).queue( function(n) { clearInterval( timer ); HighlanderComments.resizeCallback(); n(); } );
+		jQuery( '#comment-form-identity' ).slideDown();
+		jQuery( '#comment-form-subscribe' ).slideDown();
+		jQuery( '#commentform .form-submit' ).slideDown();
+	});
+}
+jQuery(document).ready( highlander_expando_javascript );
+</script>
+
+<div id="comment-form-subscribe" style="display: none;">
+	<p class="comment-subscription-form"><input type="checkbox" name="subscribe" id="subscribe" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-label" for="subscribe" style="display: inline;">Notify me of new comments via email.</label></p><p class="post-subscription-form"><input type="checkbox" name="subscribe_blog" id="subscribe_blog" value="subscribe" style="width: auto;"> <label class="subscribe-label" id="subscribe-blog-label" for="subscribe_blog" style="display: inline;">Notify me of new posts via email.</label></p></div>
+
+
+
+
+<p class="form-submit" style="display: none;"><input name="submit" type="submit" id="comment-submit" class="submit" value="Post Comment"> <input type="hidden" name="comment_post_ID" value="392" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="43b024a23d"></p>
+<input type="hidden" name="genseq" value="1518514167">
+<p style="display: none;"></p>			<input type="hidden" id="ak_js" name="ak_js" value="1518518510357"></form>
+			</div><!-- #respond -->
+	<div style="clear: both"></div>
+</div><!-- #comments -->
+
+				
+			</div><!-- #content -->
+		</div><!-- #primary -->
+
+
+	</div><!-- #main -->
+
+	<footer id="colophon" role="contentinfo">
+
+			
+<div id="supplementary" class="three">
+		<div id="first" class="widget-area" role="complementary">
+				<aside id="recent-posts-3" class="widget widget_recent_entries">		<h3 class="widget-title">Recent Posts</h3>		<ul>
+											<li>
+					<a href="https://hilaryparker.com/2014/05/27/sunsets-in-google-calendar-using-r/">Sunsets in Google Calendar using&nbsp;R</a>
+									</li>
+											<li>
+					<a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/">Writing an R package from&nbsp;scratch</a>
+									</li>
+											<li>
+					<a href="https://hilaryparker.com/2013/05/15/im-dr-hilary-parker/">I’m Dr. Hilary&nbsp;Parker!</a>
+									</li>
+											<li>
+					<a href="https://hilaryparker.com/2013/04/03/personal-r-packages/">Personal R Packages</a>
+									</li>
+											<li>
+					<a href="https://hilaryparker.com/2013/03/12/teach-statistics-before-calculus/">Teach statistics before&nbsp;calculus!</a>
+									</li>
+					</ul>
+		</aside>	</div><!-- #first .widget-area -->
+	
+		<div id="second" class="widget-area" role="complementary">
+		<aside id="linkcat-1356" class="widget widget_links"><h3 class="widget-title">Blogroll</h3>
+	<ul class="xoxo blogroll">
+<li><a href="http://simplystatistics.org/" title="We are three biostatistics professors (Jeff Leek, Roger Peng, and Rafa Irizarry) who are fired up about the new era where data are abundant and statisticians are scientists.">Simply Statistics</a></li>
+<li><a href="http://www.r-bloggers.com/" title="R news and tutorials contributed by R bloggers" target="_blank">R-bloggers</a></li>
+
+	</ul>
+</aside>
+	</div><!-- #second .widget-area -->
+	
+		<div id="third" class="widget-area" role="complementary">
+		<aside id="twitter-2" class="widget widget_twitter"><h3 class="widget-title"><a href="http://twitter.com/hspter">Twitterings</a></h3><ul class="tweets">
+			<li>
+				Well, I'm not going to act like reading this paragraph wasn't immensely satisfying <a href="https://twitter.com/johnmyleswhite/status/963033598432563200"> twitter.com/johnmyleswhite…</a> <a href="https://t.co/iCE4pAkRn7" rel="nofollow">https://t.co/iCE4pAkRn7</a> 				<a href="http://twitter.com/hspter/statuses/963134651043852288" class="timesince">13&nbsp;hours&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				This stuff is so cool -- I wore 3D "knitted" clothes from Uniqlo both yesterday and today. Got compliments even <img draggable="false" class="emoji" alt="😆" src="./Writing an R package from scratch _ Not So Standard Deviations_files/1f606.svg">&nbsp;<a href="https://www.technologyreview.com/s/604102/3-d-knitting-brings-tech-to-your-sweaters-for-a-price/"> technologyreview.com/s/604102/3-d-k…</a> 				<a href="http://twitter.com/hspter/statuses/962048843129921536" class="timesince">3&nbsp;days&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href="http://twitter.com/kara_woo">kara_woo</a>: The @<a href="http://twitter.com/rOpenSci">rOpenSci</a> unconference is coming to Seattle! This is a great event that I highly recommend nominating yourself for if you… 				<a href="http://twitter.com/hspter/statuses/961987079856037890" class="timesince">3&nbsp;days&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href="http://twitter.com/opencpu">opencpu</a>: I'm working on a powerful new <a href="http://twitter.com/search?q=%23rstats">#rstats</a> package: native R ssh client.  <a href="https://github.com/ropensci/ssh#ssh"> github.com/ropensci/ssh#s…</a> - Run commands, scp files, or set… 				<a href="http://twitter.com/hspter/statuses/961318071641300992" class="timesince">5&nbsp;days&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href="http://twitter.com/SICKOFWOLVES">SICKOFWOLVES</a>: BEING HUMAN IS COOL BECAUSE I CAN WORK SUPER HARD TO ACHIEVE SUCCESS IN SOMETHING ONLY TO IMMEDIATELY CONVINCE MYSELF THA… 				<a href="http://twitter.com/hspter/statuses/960182685648891904" class="timesince">1&nbsp;week&nbsp;ago</a>
+			</li>
+
+			</ul><iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-follow-button twitter-follow-button-rendered" title="Twitter Follow Button" src="./Writing an R package from scratch _ Not So Standard Deviations_files/follow_button.36c0c29c73929bf937f4c70adb1a29e4.en.html" style="position: static; visibility: visible; width: 108px; height: 20px;" data-screen-name="hspter"></iframe></aside>	</div><!-- #third .widget-area -->
+	</div><!-- #supplementary -->
+			<div id="site-generator">
+								<a href="https://wordpress.com/?ref=footer_blog">Blog at WordPress.com.</a>
+				
+							</div>
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/gprofiles.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var WPGroHo = {"my_hash":""};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/wpgroho.js"></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-59bb043810ee72608c62ee69fc2818b8">
+	</div>
+	<div class="grofile-hash-map-7a8c93aa1d4eb3cbdc4457d3797a35ac">
+	</div>
+	<div class="grofile-hash-map-929782a1dc674085d66a4335801acd2a">
+	</div>
+	<div class="grofile-hash-map-25690177e00a8f8a50201e1435f8ca18">
+	</div>
+	<div class="grofile-hash-map-6b08f35734663bd6ad3128c879d074fd">
+	</div>
+	<div class="grofile-hash-map-e2e9dd2f71ef63634270c8ffcab889bd">
+	</div>
+	<div class="grofile-hash-map-562fa5cb7a89ff596cbea9a9549fa9b1">
+	</div>
+	<div class="grofile-hash-map-797e7184afebad8351643acbb9959c5c">
+	</div>
+	<div class="grofile-hash-map-6d1e4a6b863912c9d810d80836511a55">
+	</div>
+	<div class="grofile-hash-map-9989236bda812cc6db31d93613213b9c">
+	</div>
+	</div>
+<script type="text/javascript">
+/* <![CDATA[ */
+var HighlanderComments = {"loggingInText":"Logging In\u2026","submittingText":"Posting Comment\u2026","postCommentText":"Post Comment","connectingToText":"Connecting to %s","commentingAsText":"%1$s: You are commenting using your %2$s account.","logoutText":"Log Out","loginText":"Log In","connectURL":"https:\/\/hilaryparker.wordpress.com\/public.api\/connect\/?action=request","logoutURL":"https:\/\/hilaryparker.wordpress.com\/wp-login.php?action=logout&_wpnonce=bca09feece","homeURL":"https:\/\/hilaryparker.com\/","postID":"392","gravDefault":"identicon","enterACommentError":"Please enter a comment","enterEmailError":"Please enter your email address here","invalidEmailError":"Invalid email address","enterAuthorError":"Please enter your name here","gravatarFromEmail":"This picture will show whenever you leave a comment. Click to customize it.","logInToExternalAccount":"Log in to use details from one of these accounts.","change":"Change","changeAccount":"Change Account","comment_registration":"","userIsLoggedIn":"","isJetpack":"","text_direction":"ltr"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource(2)"></script>
+
+	<div id="carousel-reblog-box">
+		<form action="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" name="carousel-reblog">
+			<textarea id="carousel-reblog-content" name="carousel-reblog-content" placeholder="Add your thoughts here... (optional)"></textarea>
+			<label for="carousel-reblog-to-blog-id" id="carousel-reblog-lblogid">Post to</label>
+			<select name="carousel-reblog-to-blog-id" id="carousel-reblog-to-blog-id">
+						</select>
+
+			<div class="submit">
+				<span class="canceltext"><a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/#" class="cancel">Cancel</a></span>
+				<input type="submit" name="carousel-reblog-submit" class="button" id="carousel-reblog-submit" value="Reblog Post">
+				<input type="hidden" id="carousel-reblog-blog-id" value="38883423">
+				<input type="hidden" id="carousel-reblog-blog-url" value="https://hilaryparker.com">
+				<input type="hidden" id="carousel-reblog-blog-title" value="Not So Standard Deviations">
+				<input type="hidden" id="carousel-reblog-post-url" value="">
+				<input type="hidden" id="carousel-reblog-post-title" value="">
+			</div>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="edea4c74b5"><input type="hidden" name="_wp_http_referer" value="/2014/04/29/writing-an-r-package-from-scratch/">		</form>
+
+		<div class="arrow"></div>
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/hilaryparker.com\/2014\/04\/29\/writing-an-r-package-from-scratch\/":392};
+	</script>
+		<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-twitter' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+		});
+		</script>
+				<script type="text/javascript">
+			var windowOpen;
+		jQuery(document).on( 'ready post-load', function(){
+			jQuery( 'a.share-facebook' ).on( 'click', function() {
+				if ( 'undefined' !== typeof windowOpen ){ // If there's another sharing window open, close it.
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery(this).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+		});
+		</script>
+		<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/widgets.js"></script>
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource(3)"></script>
+<script type="text/javascript">
+	(function(){
+		var corecss = document.createElement('link');
+		var themecss = document.createElement('link');
+		var corecssurl = "https://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shCore.css?ver=3.0.9b";
+		if ( corecss.setAttribute ) {
+				corecss.setAttribute( "rel", "stylesheet" );
+				corecss.setAttribute( "type", "text/css" );
+				corecss.setAttribute( "href", corecssurl );
+		} else {
+				corecss.rel = "stylesheet";
+				corecss.href = corecssurl;
+		}
+		document.getElementsByTagName("head")[0].insertBefore( corecss, document.getElementById("syntaxhighlighteranchor") );
+		var themecssurl = "https://s0.wp.com/wp-content/plugins/syntaxhighlighter/syntaxhighlighter3/styles/shThemeDefault.css?m=1363304414h&amp;ver=3.0.9b";
+		if ( themecss.setAttribute ) {
+				themecss.setAttribute( "rel", "stylesheet" );
+				themecss.setAttribute( "type", "text/css" );
+				themecss.setAttribute( "href", themecssurl );
+		} else {
+				themecss.rel = "stylesheet";
+				themecss.href = themecssurl;
+		}
+		//document.getElementById("syntaxhighlighteranchor").appendChild(themecss);
+		document.getElementsByTagName("head")[0].insertBefore( themecss, document.getElementById("syntaxhighlighteranchor") );
+	})();
+	SyntaxHighlighter.config.strings.expandSource = '+ expand source';
+	SyntaxHighlighter.config.strings.help = '?';
+	SyntaxHighlighter.config.strings.alert = 'SyntaxHighlighter\n\n';
+	SyntaxHighlighter.config.strings.noBrush = 'Can\'t find brush for: ';
+	SyntaxHighlighter.config.strings.brushNotHtmlScript = 'Brush wasn\'t configured for html-script option: ';
+	SyntaxHighlighter.defaults['pad-line-numbers'] = false;
+	SyntaxHighlighter.defaults['toolbar'] = false;
+	SyntaxHighlighter.all();
+
+// Infinite scroll support
+jQuery( function( $ ) {
+	$( document.body ).on( 'post-load', function() {
+		SyntaxHighlighter.highlight();
+	} );
+} );
+</script>
+<link rel="stylesheet" id="all-css-0-3" href="./Writing an R package from scratch _ Not So Standard Deviations_files/jetpack-carousel.css" type="text/css" media="all">
+<!--[if lte IE 8]>
+<link rel='stylesheet' id='jetpack-carousel-ie8fix-css'  href='https://s1.wp.com/wp-content/mu-plugins/carousel/jetpack-carousel-ie8fix.css?m=1412618825h&#038;ver=20121024' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript">
+/* <![CDATA[ */
+var actionbardata = {"siteID":"38883423","siteName":"Not So Standard Deviations","siteURL":"https:\/\/hilaryparker.com","icon":"<img alt='' src='https:\/\/secure.gravatar.com\/blavatar\/fb5233d1887cf3a08135084e24d8827f?s=50&d=https%3A%2F%2Fs1.wp.com%2Fi%2Flogo%2Fwpcom-gray-white.png' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/hum","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/hilaryparker.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F","themeURL":"","xhrURL":"https:\/\/hilaryparker.com\/wp-admin\/admin-ajax.php","nonce":"eb4a8afc3d","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"1d30d4a166\" \/>","referer":"https:\/\/hilaryparker.com\/2014\/04\/29\/writing-an-r-package-from-scratch\/","canFollow":"1","feedID":"4295626","statusMessage":"","customizeLink":"https:\/\/hilaryparker.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fhilaryparker.wordpress.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F","postID":"392","shortlink":"https:\/\/wp.me\/p2D9lZ-6k","canEditPost":"","editLink":"https:\/\/wordpress.com\/post\/hilaryparker.com\/392","statsLink":"https:\/\/wordpress.com\/stats\/post\/392\/hilaryparker.com","i18n":{"view":"View site","follow":"Follow","following":"Following","edit":"Edit","login":"Log in","signup":"Sign up","customize":"Customize","report":"Report this content","themeInfo":"Get theme: Hum","shortlink":"Copy shortlink","copied":"Copied","followedText":"New posts from this site will now appear in your <a href=\"https:\/\/wordpress.com\/\">Reader<\/a>","foldBar":"Collapse this bar","unfoldBar":"Expand this bar","editSubs":"Manage subscriptions","viewReader":"View site in Reader","viewReadPost":"View post in Reader","subscribe":"Sign me up","enterEmail":"Enter your email address","followers":"Join 312 other followers","alreadyUser":"Already have a WordPress.com account? <a href=\"https:\/\/hilaryparker.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F\">Log in now.<\/a>","stats":"Stats"}};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https:\/\/hilaryparker.com\/wp-admin\/admin-ajax.php","nonce":"e0546c7c2a","display_exif":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","download_original":"View full size <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","comment_registration":"0","require_name_email":"1","login_url":"https:\/\/hilaryparker.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F","blog_id":"38883423","local_comments_commenting_as":"<fieldset><label for=\"email\">Email (Required)<\/label> <input type=\"text\" name=\"email\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-email-field\" \/><\/fieldset><fieldset><label for=\"author\">Name (Required)<\/label> <input type=\"text\" name=\"author\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-author-field\" \/><\/fieldset><fieldset><label for=\"url\">Website<\/label> <input type=\"text\" name=\"url\" class=\"jp-carousel-comment-form-field jp-carousel-comment-form-text-field\" id=\"jp-carousel-comment-form-url-field\" \/><\/fieldset>","reblog":"Reblog","reblogged":"Reblogged","reblog_add_thoughts":"Add your thoughts here... (optional)","reblogging":"Reblogging...","post_reblog":"Post Reblog","stats_query_args":"blog=38883423&v=wpcom&tz=0&user_id=0&subd=hilaryparker","is_public":"1","reblog_enabled":""};
+/* ]]> */
+</script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var sharing_js_options = {"lang":"en","counts":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource(4)"></script><div id="actionbar" class="actnbr-pub-hum actnbr-has-follow"><ul><li class="actnbr-btn actnbr-hidden"> 			    	<a class="actnbr-action actnbr-actn-follow" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/"><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a> 			    	<div class="actnbr-popover tip tip-top-left actnbr-notice"> 			    		<div class="tip-arrow"></div> 			    		<div class="tip-inner actnbr-follow-bubble"></div> 			    	</div> 			    </li><li class="actnbr-ellipsis actnbr-hidden"> 			  <svg class="gridicon gridicon__ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="12" r="2"></circle><circle cx="12" cy="12" r="2"></circle></g></svg> 			  <div class="actnbr-popover tip tip-top-left actnbr-more"> 			  	<div class="tip-arrow"></div> 			  	<div class="tip-inner"> 				  <ul> 				    <li class="actnbr-sitename actnbr-hidden"><a href="https://hilaryparker.com/"><img alt="" src="./Writing an R package from scratch _ Not So Standard Deviations_files/fb5233d1887cf3a08135084e24d8827f" class="avatar avatar-50" height="50" width="50"> Not So Standard Deviations</a></li> 				   	<li class="actnbr-folded-customize actnbr-hidden"><a href="https://hilaryparker.wordpress.com/wp-admin/customize.php?url=https%3A%2F%2Fhilaryparker.wordpress.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F"><svg class="gridicon gridicon__customize" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M2 6c0-1.505.78-3.08 2-4 0 .845.69 2 2 2 1.657 0 3 1.343 3 3 0 .386-.08.752-.212 1.09.74.594 1.476 1.19 2.19 1.81L8.9 11.98c-.62-.716-1.214-1.454-1.807-2.192C6.753 9.92 6.387 10 6 10c-2.21 0-4-1.79-4-4zm12.152 6.848l1.34-1.34c.607.304 1.283.492 2.008.492 2.485 0 4.5-2.015 4.5-4.5 0-.725-.188-1.4-.493-2.007L18 9l-2-2 3.507-3.507C18.9 3.188 18.225 3 17.5 3 15.015 3 13 5.015 13 7.5c0 .725.188 1.4.493 2.007L3 20l2 2 6.848-6.848c1.885 1.928 3.874 3.753 5.977 5.45l1.425 1.148 1.5-1.5-1.15-1.425c-1.695-2.103-3.52-4.092-5.448-5.977z" data-reactid=".2.1.1:0.1b.0"></path></g></svg><span>Customize<span></span></span></a></li> 				    <li class="actnbr-folded-follow actnbr-hidden"><a class="actnbr-action actnbr-actn-follow" href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/"><svg class="gridicon gridicon__follow" height="24px" width="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M23 16v2h-3v3h-2v-3h-3v-2h3v-3h2v3h3zM20 2v9h-4v3h-3v4H4c-1.1 0-2-.9-2-2V2h18zM8 13v-1H4v1h4zm3-3H4v1h7v-1zm0-2H4v1h7V8zm7-4H4v2h14V4z"></path></g></svg><span>Follow</span></a></li> 					<li class="actnbr-signup actnbr-hidden"><a href="https://wordpress.com/start/">Sign up</a></li> 				    <li class="actnbr-login actnbr-hidden"><a href="https://hilaryparker.wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Fhilaryparker.com%2F2014%2F04%2F29%2Fwriting-an-r-package-from-scratch%2F">Log in</a></li> 				     				    <li class="actnbr-shortlink actnbr-hidden"><a href="https://wp.me/p2D9lZ-6k">Copy shortlink</a></li> 				    <li class="flb-report actnbr-hidden"><a href="http://en.wordpress.com/abuse/">Report this content</a></li> 				     				     				    <li class="actnbr-subs actnbr-hidden"><a href="https://subscribe.wordpress.com/">Manage subscriptions</a></li> 				    <li class="actnbr-fold actnbr-hidden"><a href="https://hilaryparker.com/2014/04/29/writing-an-r-package-from-scratch/">Collapse this bar</a></li> 			      </ul> 			    </div> 		      </div> 		    </li> 	      </ul></div>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>		<iframe src="./Writing an R package from scratch _ Not So Standard Deviations_files/master.html" scrolling="no" id="likes-master" name="likes-master" style="display:none;"></iframe>
+		<div id="likes-other-gravatars"><div class="likes-text"><span>%d</span> bloggers like this:</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+<script src="./Writing an R package from scratch _ Not So Standard Deviations_files/w.js" type="text/javascript" async="" defer=""></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'38883423','blog_tz':'0','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+_stq.push(['view', {'blog':'38883423','v':'wpcom','tz':'0','user_id':'0','post':'392','subd':'hilaryparker'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1TaVhzUzFMbjdWNHpwZGhTayxPSUFCMGRVYVNrSFguN3FwSmQ5RGtNX3VQcj1yVzhiflM1THQtLGFdQ2toOXYlWlQ4a29MY2dLbUZzRFBzcnp0d3VsU29VVHxaQWtDbHJ3THhOLWpieHklXT9LdzZ4WU12THRXRisuWERnaz1mPUVaNGgmZGM/Y0RkVHh0TjM1bi56d35uZWpvflM9YitzbD8xQjV2S19UJixMQjdZMHJkQUsyfi1mYz1MP2YmaXlpTG9vVDJmTF8vOHJpZS4rcHRdbWp5RHZ+dTNvK19nfEJteFhhYUphVThvMn5TTDZCLXM0MFBPQnxNLVJFejh1eTdUa3FFK11ZcHdNW0ttVQ=='}]);
+_stq.push([ 'clickTrackerInit', '38883423', '392' ]);
+	</script>
+<noscript>&lt;img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /&gt;</noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+
+<iframe scrolling="no" frameborder="0" allowtransparency="true" src="./Writing an R package from scratch _ Not So Standard Deviations_files/widget_iframe.36c0c29c73929bf937f4c70adb1a29e4.html" style="display: none;"></iframe><img src="./Writing an R package from scratch _ Not So Standard Deviations_files/g.gif" alt=":)" id="wpstats"><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" title="Twitter analytics iframe" src="./Writing an R package from scratch _ Not So Standard Deviations_files/saved_resource.html"></iframe></body></html>

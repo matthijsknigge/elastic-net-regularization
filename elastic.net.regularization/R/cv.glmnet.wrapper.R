@@ -1,6 +1,6 @@
 #' Add together two numbers.
-#' 
-#' @author Matthijs Knigge
+#'
+#' @author Olivier
 #' @param x x matrix
 #' @param y a vector of outcomes.
 #' @param k an integer for the number of folds.
@@ -35,3 +35,6 @@ cv.glmnet.wrapper <- function(y, x, kfold=10, scale.x=F, verbose=T,  ...) {
   }, y=y, x=x)
   return(results)
 }
+
+
+

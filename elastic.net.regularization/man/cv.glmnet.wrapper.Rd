@@ -23,5 +23,5 @@ Add together two numbers.
 cv.glmnet.wrapper()
 }
 \author{
-Matthijs Knigge
+Olivier
 }

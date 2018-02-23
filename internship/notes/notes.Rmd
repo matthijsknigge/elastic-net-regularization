@@ -1,0 +1,135 @@
+---
+author: M.Knigge
+date: "12/02/2018"
+title: "INTERPLAY BETWEEN GUT MICROBIOME AND IMMUNE SYSTEM"
+output: pdf_document
+---
+
+### IMPORTANT TERMS & CONCEPTS
+
+Terms and concepts from which I think they are important for the project:
+
+* $\alpha$ parameter
+    * $\alpha = 0$ Ridge Regression
+    * $\alpha = 1$ LASSO
+    * $0 < \alpha < 1$ Elastic Net
+* $\ell_1$ penalty
+* $\ell_2$ penalty
+* $\lambda$
+* $R^2$
+* Adjusted R-Squared
+* ANOVA
+* Bias and Variance Tradeoff
+* Coefficient
+* Collinearity
+* Cross-Validation
+* Dependent Variable
+* Differentiate
+* Elastic Net Regularization
+* Error due to Bias
+* Error due to Variance
+* F-test
+* Gauss Markov Theorem
+* Heteroscedasticity
+* High-Dimensional Data
+* Independent Variable
+* Interaction Terms
+* Intercept
+* Least Absolute Shrinkage and Selection Operator (LASSO)
+* Level-Level Regression Specification
+* Linear Regression
+* Log Transformations
+* Logistic Regression
+* Log-Level Regression Specification
+* Log-Log Regression Specification
+* Mean Square Error (MSE)
+* Multicollinearity
+* Multiple Linear Regression
+* One-Sample Mendelian Randomization (MR)
+* Ordinary Least Squares (OLS)
+* Outlier Detection
+* Residual
+* Ridge Bias Constant
+* Ridge Regression
+* Ridge Trace
+* Ridge, LASSO, Elastic Net all part of the same family: $P_{\alpha} = \sum_{i=1}^{p} = [\frac{1}{2} (1 - \alpha) b_j^2 + \alpha |b_j|]$
+* Sample Variance
+* Scale in Ridge Regression
+* Shrinkage Estimators
+* Standard Deviation (SD)
+* Standard Error of the Mean (SE)
+* Two-Stage Least Squares (2SLS) Regression
+* Variable Selection
+* Variance inflation factors (VIF)
+* There will be more..... \
+
+**LINEAR REGRESSION**: \
+Regression analysis is the science of fitting straight lines to patterns of data, it used for prediction and forcasting. In a linear regression model, the variable of interest is (**dependent variable**) predicted from a single or more variables (**independent variable**) using a linear formula. Regression analysis is also used to understand to find out which among the the **independent variables** are related to the **dependent variables**, and to explore the forms of these relations.
+
+**independent variable & dependent variable**: *dependent variables depend on the values of independent variables. The dependent variables represent the output or outcome whose variation is being studied. The independent variables represent inputs or causes, potential reasons for variation or, in the experimental setting, the variable controlled by the experimenter. Models and experiments test or determine the effects that the independent variables have on the dependent variables.*
+
+The simple regression model can be represented as follows:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \epsilon
+$$
+The $\beta_0$ is the Y intercept value, the coefficient $\beta_1$ is the slope of the line, the $X_1$ is an independent variable and $\epsilon$ is the error term. The error term is used for correcting a prediction error between the observed and predicted value. This can be interpreted as for each unit increase in $X_1$, $Y$ will increase by some value. \
+
+**MULTIPLE LINEAR REGRESSION**:\ 
+A multiple linear regression is the same as a simple linear regression but, there can be multiple coefficients and independent variables:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + .. + \epsilon
+$$
+**ORDINARY LEAST SQUARES**:\
+
+**Ordinary Least Squares** (OLS) is method for estimating/predicting parameters that are unknown in a linear regression model. OLS chooses the parameters of a linear function in a set of **independent variables** by minimizing the sum of the squares of the differences between the observed **dependent variable** (values of the variable that will be predicted) in the given dataset and those predicted by the linear function. This can be seen as a square drawn between the predicted and observed (the **dependent variable**). The sum of Squares are a representation of the error in the OLS regression model. In linear regression models, prediction errors can be decomposed into two main subcomponents: **error due to bias**, and **error due to variance**. Understanding bias and variance is key to understanding the behaviour of prediction models. It is important to understand how different sources of error lead to bias and variance and this can help improve data fitting.
+
+**Error due to bias**: *error because of bias is taken as the difference between the expected or average prediction of the model and the correct value which the model tries to predict.*\
+**Error due to variance**: *Error because of variance is taken as the variability of a model prediction for a given data point. The entire model building process is repeated multiple times for example, then the variance is how much predictions for a given data point vary between different realizations of the model.*
+
+There is a tradeoff between a models ability to minimize bias and variance. The best model is where the level of complexity is the point where the increase in bias is equivalent to the reduction of variance. Bias is reduced and variance is increased in relation to the complexity of a model. As more parameters are added to the model, the complexity of the model rises and the variance becomes the primary concern, and the bias falls. The Gauss Markov Theorem states that among all linear unbiased estimates, OLS has the smallest variance. What implies that OLS estimates have the smallest **MSE** among linear estimators. **But, is it possible that there can be a biased estimator with a smaller MSE?** This is where **Shrinkage Estimators** are used.
+
+**MSE**: *Measures the average of the squares of the errors, that is, the difference between the estimator and what is estimated. MSE is a measure of the quality of an estimator—it is always non-negative, and values closer to zero are better.*\
+**Shrinkage Estimators**: *This an estimator that, either explicitly or implicitly, incorporates the effects of shrinkage. This means that a raw estimate is improved by combining it with other information. The term relates to the concept that the improved estimate is made closer to the value supplied by the 'other information' than the raw estimate. Estimators can be improved, in terms of mean squared error (MSE), by shrinking them towards zero (or any other fixed constant value). Assume that the expected value of the raw estimate is not zero and consider other estimators obtained by multiplying the raw estimate by a certain parameter. A value for this parameter can be specified so as to minimize the MSE of the new estimate. For this value of the parameter, the new estimate will have a smaller MSE than the raw one. Thus it has been improved. An effect here may be to convert an unbiased raw estimate to an improved biased one.*
+
+### REGRESSION DIAGNOSTICS
+There are a number of statistics diagnostic tests that can be drawn from to evaluate linear regression models. For example: Coefficient of determination, residual plot, variance inflation factor, Cook's distance, etc.
+
+### COEFFICIENT DETERMINATION
+
+**R-Squared**: coefficient of determination. This is a measure of the goodness of fit for a linear regression model. It is the percentage of the dependent variable variation that is explained by a linear model. $R^2$ =  explained variation / total variation. The $R^2$ is always between 0 and 100%. Zero percent indicates that the model explains none of the variability of the dependent variable around its mean. 100 percent indicates that the model explains all the variability of the dependent data around its mean.
+
+Low $R^2$ values are not inherently bad. In some fields it is expected that the R-Squared values will be low. For example in predicting human behavior. If the $R^2$ is low, but the still the predictors are significantly it is still possible to draw conclusions in how changes in the predictor values are associated with changes in the response value. And regardless of the R-Squared, the significant coefficients still represent the mean change in the response for one unit change in the predictor. The number of independent variables in the model will increase the value of R-Squared, regardless whether the variables offer an increase in explanatory power. To act on this, the **Adjusted R-Squared** metric can be utilized to penelize a model for having to many variables. 
+
+Limitations: $R^2$ can not determine whether the coefficient estimates and predictions are biased. Herefore can residual plots be used. R-Squared does not indicate whether a regression model is aequate.
+
+### RESIDUAL PLOT
+This is a scatterplot of the **residuals** (difference between the actual and predicted value) against the predicted value. A good model will show a random pattern of the residuals with no shape. Residual plots can be used for diagnostics and assumption testing in linear regression.
+
+### HETEROSCEDASTICITY
+Linear regression using OLS has the assumption that residuals are identical distributed across every X variable. If this condition holds true, the error terms are **homogeneous**, which means that the errors have the same scatter regardless of the value of X. When the scatter of the errors is different, varying depending on the value of one or more of the independent variables, the error terms are **heterogeneous**.
+
+A collection of random variables is **heteroscedastic** if there are sub-populations that have different variabilities from others. Here "variability" could be quantified by the variance or any other measure of statistical dispersion. Thus heteroscedasticity is the absence of homoscedasticity. The existence of heteroscedasticity is a major concern in the application of regression analysis, including the analysis of variance, as it can invalidate statistical tests of significance that assume that the modelling errors are uncorrelated and uniform—hence that their variances do not vary with the effects being modeled. 
+
+### MULTICOLLINEARITY
+**Collinearity (or multicollinearity)** is the not favoured situation where the correlations among the independent variables are strong. In some cases, multiple regression can reflect a significant relation when there is none. For example, the model can fit the data very well, when even none of the X variables have a significant impact on explaining Y. This is possible when two X variables are highly correlated, they both bring the same information, and when this happens, the X variables are **collinear** and the results show **multicollinearity**. This is a problem because it inflates the **standard errors** of the **coefficients**, which makes some variables not significant when they should be.
+
+### DETECT MULTICOLLINEARITY
+**Variance inflation factors (VIF)** measure how much variance of the estimated coefficients are increased over the case of not having correlation between X variables. If there are two variables correlated, how to decide which one should be removed? To determine the best one to remove, remove each one seperately from the model en perform regression and select the regression equation that explains the most variance: the highest $R^2$.
+
+### INTERACTION TERMS IN MODEL
+Adding interaction terms to a regression model can improve the understanding of the relationshihps among variables in the model and allows for more hypotheses to be tested. The presence of a significant interaction indicates that the effect of one predictor variable on the response variable is different at different values of the other predictor variable. It is tested by adding a term to the model in which the two predictor variables are multiplied:
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 (X_1 X_2)
+$$
+Adding a term to the model changes the interpretation of all of the coefficients. If there are no interaction terms added, $\beta_1$ would be interpreted as the unique effect of $X_1$ on $Y$. But the interaction means that the effect of $X_1$ on $Y$ is different for different values of $X_2$. Thus, the effect of $X_1$ on $Y$ is not limited to $\beta_1$, but also depends on the values of $X_2$ and $\beta_3$. The unique effect of $X_1$ is represented by everything that is multiplied by $X_1$ in the model: $\beta_1 + \beta_3 X_2$. $\beta_1$ is now interpreted as the unique effect of $X_1$ on $Y$ only when $X_2$ is zero.
+
+
+
+
+
+
+
+

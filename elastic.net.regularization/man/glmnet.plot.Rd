@@ -2,19 +2,20 @@
 % Please edit documentation in R/glmnet.plot.R
 \name{glmnet.plot}
 \alias{glmnet.plot}
-\title{plot glmnet results}
+\title{plot elastic net}
 \usage{
-glmnet.plot(glmnet.object)
+glmnet.plot(glmnet.data.frame, ylab, xlab, title, interval, filename)
 }
 \value{
-plot object
+ggplot object
 }
 \description{
-plot glmnet results
+plot elastic net
 }
 \examples{
-simple.linear.regression(x = c(1,2,3,4,5,6), y = c(1,2,3,4,5,6))
+glmnet.plot()
 }
 \author{
 Matthijs Knigge
 }
+\keyword{plot}

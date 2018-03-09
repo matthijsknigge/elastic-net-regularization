@@ -15,6 +15,7 @@
 #'         
 glmnet.cor <- function(data.x, data.y, write = FALSE, path = NULL, melt = FALSE, method = c("spearman")){
   # libraries
+  require(reshape2)
   
   # get intersect
   int <- Reduce(intersect, list(rownames(data.x), rownames(data.y)))
@@ -31,6 +32,11 @@ glmnet.cor <- function(data.x, data.y, write = FALSE, path = NULL, melt = FALSE,
                           function(y) { cor.test(x,y, method = "spearman")$p.value }) })) 
   # add rownames
   cor.matrix$identifier <- rownames(cor.matrix)
+  
+  # reshape
+  if(melt){
+    cor.matrix <- melt(cor.matrix)
+  }
   
   # write.output
   if(write){

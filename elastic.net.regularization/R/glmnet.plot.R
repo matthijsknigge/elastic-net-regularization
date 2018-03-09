@@ -1,11 +1,6 @@
 #' plot elastic net
 #' @author Matthijs Knigge
 #'
-#' @param 
-#' @param 
-#' @param 
-#' @param 
-#' @param 
 #' @keywords plot
 #' @export
 #' @examples

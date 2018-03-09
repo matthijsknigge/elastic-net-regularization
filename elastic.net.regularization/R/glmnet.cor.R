@@ -42,4 +42,3 @@ glmnet.cor <- function(data.x, data.y, write = FALSE, path = NULL, melt = FALSE,
   # return
   return(list(cor.matrix = cor.matrix))
 }
-1121*100

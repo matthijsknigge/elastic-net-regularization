@@ -4,7 +4,18 @@
 \alias{glmnet.plot}
 \title{plot elastic net}
 \usage{
-glmnet.plot(glmnet.data.frame, ylab, xlab, title, interval, filename)
+glmnet.plot(obs, pred, fold, identifier, imp)
+}
+\arguments{
+\item{obs}{vector float, containing predicted values for Y}
+
+\item{pred}{vector float, containing observed values for X}
+
+\item{fold}{vector character, containing fold identifier}
+
+\item{identifier}{character name of phenotype}
+
+\item{imp}{numeric, impuation identifier}
 }
 \value{
 ggplot object

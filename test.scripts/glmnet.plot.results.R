@@ -14,7 +14,7 @@ path.to.output <- "~/Bioinformatics/test.results/plots/"
 obs.pred <- fread("~/Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/df.pred.obs.txt", col.names = c("sample", "pred", "obs", "fold", "imputation", "cytokine", "stimulation"))
 coef <- fread("~/Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/df.coef.txt", col.names = c("imputation", "cytokine", "stimulation","coef.fold.1", "coef.fold.2", "coef.fold.3", "coef.fold.4","coef.fold.5", "coef.fold.6", "coef.fold.7", "coef.fold.8","coef.fold.9", "coef.fold.10", "amount.genes"))
 cor <- fread("~/Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/cor.matrix.txt"); 
-coef.new <- fread("Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/df.coef.molten.txt")
+coef.new <- fread("Bioinformatics/results/10.imputation.10.fold.immune.phenotypes/data.summary/df.coef.molten.txt")
 cytokine.info <- fread("Bioinformatics/data/cytokine.levels.info.txt")
 cor.molt <- fread("Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/cor.molten.txt")
 coef.molt <- fread("Bioinformatics/test.results/10.imputation.10.fold.immune.phenotypes/data.summary/df.coef.molten.txt")

@@ -21,7 +21,7 @@ cv.glmnet.wrapper <- function(y, x, kfold=10, scale.x=F, verbose=T,  ...) {
   y             <- y[ol]
   x             <- x[ol, , drop=F]
   # Create the 10 stratified folds
-  folds         <- createFolds(y, k=kfold)
+  folds         <- create.k.folds(y, k=kfold)
   # Run glmnet.wrapper on the k folds
   results <- lapply(folds, function(fold, y, x) {
     # apply glmnet for every fold

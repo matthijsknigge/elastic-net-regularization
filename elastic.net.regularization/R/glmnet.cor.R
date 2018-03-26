@@ -29,7 +29,7 @@ glmnet.cor <- function(data.x, data.y, write = FALSE, path = NULL, melt = FALSE,
   data.y <- data.matrix(data.y)
   # do cor
   cor.matrix <- data.frame(apply(data.y, 2, function(x) { apply(data.x, 2,   
-                          function(y) { cor.test(x,y, method = "spearman")$p.value }) })) 
+                          function(y) { cor.test(x,y, method = "spearman", exact = F)$p.value }) })) 
   # add rownames
   cor.matrix$identifier <- rownames(cor.matrix)
   

@@ -4,18 +4,18 @@
 \alias{glmnet.bar.plot}
 \title{plot elastic net}
 \usage{
-glmnet.bar.plot(identifier, group, gene.amount.before, gene.amount.after, title)
+glmnet.bar.plot(identifier, group, before, after, title)
 }
 \arguments{
 \item{identifier}{vector character of phenotypes}
 
 \item{group}{vector character of grouping}
 
+\item{title}{character title of plot}
+
 \item{gene.amount.before}{numeric vector containing average genes before per imputation}
 
 \item{gene.amount.after}{numeric vector containing average genes after per imputation}
-
-\item{title}{character title of plot}
 }
 \value{
 ggplot object

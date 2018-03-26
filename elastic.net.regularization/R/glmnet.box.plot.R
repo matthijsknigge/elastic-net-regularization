@@ -48,10 +48,10 @@ glmnet.box.plot <- function(coef, group, identifier, title){
   p <- ggplot(data = tmp.df, aes(y = coef, x = identifier, fill = group, color = group))
   # create facet for each group
   p <- p + facet_grid(group~., scales = "free", space = "free")
-  # add boxplot
-  p <- p + geom_boxplot(width = 0.7, position=position_dodge(1), alpha=.7)
   # add jitter points
   p <- p + geom_jitter(col="grey", alpha=.7, show.legend = FALSE)
+  # add boxplot
+  p <- p + geom_boxplot(width = 0.7, position=position_dodge(1), alpha=.7)
   # mean lines
   p <- p + geom_hline(data = df.mean.coef, aes(yintercept = mean, color = group), size=1, linetype="solid")
   # add zero line

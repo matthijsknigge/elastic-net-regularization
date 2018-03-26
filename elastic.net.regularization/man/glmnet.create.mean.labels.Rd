@@ -4,10 +4,14 @@
 \alias{glmnet.create.mean.labels}
 \title{create mean labels}
 \usage{
-glmnet.create.mean.labels(data)
+glmnet.create.mean.labels(identifier, group, coef)
 }
 \arguments{
-\item{data}{data.frame containing columns coef, group and identifier}
+\item{identifier}{no comment yet}
+
+\item{group}{no comment yet}
+
+\item{coef}{no comment yet}
 }
 \value{
 ggplot object

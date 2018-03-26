@@ -5,7 +5,7 @@
 \title{Wrapper for Elastic Net}
 \usage{
 glmnet.wrapper(y, x, newx = NULL, newy = NULL, alpha.runs = NULL,
-  parallel = F, return.type = "custom", method = "spearman",
+  parallel = T, return.type = "custom", method = "spearman",
   use = "pairwise.complete.obs", remove.outliers = F)
 }
 \arguments{

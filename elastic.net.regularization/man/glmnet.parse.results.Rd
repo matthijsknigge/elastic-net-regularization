@@ -4,7 +4,8 @@
 \alias{glmnet.parse.results}
 \title{Parse elastic net results}
 \usage{
-glmnet.parse.results(dir, folds, data.y, merge = FALSE, data.c, melt = F)
+glmnet.parse.results(dir, folds, data.y, merge = FALSE, data.c,
+  melt = FALSE, count.input = FALSE, count.output = FALSE)
 }
 \arguments{
 \item{dir}{character, absolute path to root folder of results}
@@ -17,7 +18,11 @@ glmnet.parse.results(dir, folds, data.y, merge = FALSE, data.c, melt = F)
 
 \item{melt}{boolean, default FALSE. melt output}
 
+\item{count.input}{boolean, default FALSE. count amount of genes and SNPs that are input.}
+
 \item{by}{matrix 2*n, character. containing identifer and group column}
+
+\item{count.ouput}{boolean, default FALSE. count amount of genes and SNPs that are used.}
 }
 \value{
 results

@@ -21,25 +21,6 @@ metabolites <- fread("~/Bioinformatics/results/10.imputation.10.fold/summary/met
 # summary
 summary <- rbind(cytokines, cell.counts, platelet.counts, hormone.levels, protein.levels, immunoglobulin, metabolites)
 
-# plotting
-for(name in c("cytokines", "cell.counts", "platelet.counts", "hormone.levels", "protein.levels", "immunoglobulin", "metabolites")){
-  data <- get(name)
-  data <- glmnet.create.mean.labels(data = data)$d
-  p <- glmnet.box.plot(coef = data$coef,
-                       group = data$group,
-                       identifier = data$identifier,
-                       title = name)$p
-
-  h <- length(unique(data$identifier))*.15
-  if(length(unique(data$identifier)) < 20){
-    h <- 3
-  }
-  print(h)
-  ggsave(filename = paste0("~/Bioinformatics/results/10.imputation.10.fold/summary/", name, ".boxplot.png"), dpi = 300,
-         height = h, width = 10, plot = p)
-
-}
-
 names <- c("cell.counts", "cytokines", "hormone.levels", "immunoglobulin.levels", "metabolites", "platelet.counts", "protein.levels")
 
 # data
@@ -77,4 +58,10 @@ for(name in names){
          dpi = 300, height = h, width = 10)
 
 }
+
+arcsine.raw <- read.table("~/Bioinformatics/data/molecular.phenotypes/500FG_arcsine_transformed_taxonomy_abundance.txt")
+
+arcsine <- glmnet.parse.results()
+
+
 

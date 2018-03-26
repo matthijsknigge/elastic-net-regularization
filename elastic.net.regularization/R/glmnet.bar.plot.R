@@ -13,22 +13,26 @@
 #' @return ggplot object
 #'
 #'
-glmnet.bar.plot <- function(identifier, group, gene.amount.before, gene.amount.after, title){
+glmnet.bar.plot <- function(identifier, group, before, after, title){
   # libraries
   require(ggplot2)
   require(gridExtra)
   require(cowplot)
   # bind data before
-  data.before <- data.frame(identifier = identifier, group = group, gene.amount = gene.amount.before, when = "before")
+  data.before <- data.frame(identifier = identifier, group = group, amount = before, when = "before")
+  # remove duplicates
+  data.before <- data.before[!duplicated(data.before$identifier), ]
   # bind data after
-  data.after <- data.frame(identifier = identifier, group = group, gene.amount = gene.amount.after, when = "after")
+  data.after <- data.frame(identifier = identifier, group = group, amount = after, when = "after")
+  # remove duplicates
+  data.after <- data.after[!duplicated(data.after$identifier), ]
   # bind together
   data.tot <- rbind(data.before, data.after)
 
   # set theme
   theme_set(theme_gray())
   # initiate ggplot
-  p <- ggplot(data = data.tot, aes(x = identifier, y=gene.amount, fill = when, color = when))
+  p <- ggplot(data = data.tot, aes(x = identifier, y=amount, fill = when, color = when))
   # create grid
   p <- p + facet_grid(group~., scales = "free", space = "free")
   # bars

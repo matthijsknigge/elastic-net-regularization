@@ -1,7 +1,9 @@
 #' create mean labels
 #' @author Matthijs Knigge
 #'
-#' @param data data.frame containing columns coef, group and identifier
+#' @param identifier no comment yet
+#' @param group no comment yet
+#' @param coef no comment yet
 #' @keywords labels
 #' @export
 #' @examples
@@ -9,7 +11,9 @@
 #' @return ggplot object
 #' 
 #'      
-glmnet.create.mean.labels <- function(data){
+glmnet.create.mean.labels <- function(identifier, group, coef){
+  # create data.frame
+  data <- data.frame(identifier = identifier, group = group, coef = coef, label = "", stringsAsFactors = F)
   # create new label
   for(id in unique(data$identifier)){
     # subset data
@@ -17,9 +21,14 @@ glmnet.create.mean.labels <- function(data){
     # calc mean of identifier
     m <- mean(tmp$coef, na.rm = T)
     # create new label
-    lab <- paste0(id, "\t\t{", signif(x = m, digits = 3), "}")
+    lab <- paste0(id, " {", signif(x = m, digits = 3), "}")
     # insert into frame
-    data[which(data$identifier == id), ]$identifier <- lab
+    data[which(data$identifier == id), ]$label <- lab
   }
+  # swap
+  data$identifier <- data$label
+  # remove
+  data$label <- NULL
+  # return
   return(list(d = data))
 }

@@ -14,14 +14,9 @@ cv.glmnet.wrapper <- function(y, x, kfold=10, scale.x=F, verbose=T,  ...) {
     x           <- x[,apply(x, 2, var) != 0]
     x           <- scale(x)
   }
-  # Remove NA values
-  y             <- y[!is.na(y)]
-  x             <- na.omit(x)
-  ol            <- intersect(rownames(x), names(y))
-  y             <- y[ol]
-  x             <- x[ol, , drop=F]
+
   # Create the 10 stratified folds
-  folds         <- createFolds(y, k=kfold)
+  folds         <- create.k.folds(y, k=kfold)
   # Run glmnet.wrapper on the k folds
   results <- lapply(folds, function(fold, y, x) {
     # apply glmnet for every fold

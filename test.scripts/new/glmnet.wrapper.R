@@ -8,7 +8,7 @@
 #' @examples
 #' glmnet.wrapper()
 glmnet.wrapper <- function(y, x, newx=NULL, newy=NULL, alpha.runs=NULL,
-                           parallel=T, return.type="custom",
+                           parallel=F, return.type="custom",
                            method="spearman", use="pairwise.complete.obs",
                            remove.outliers=F) {
   # libraries
@@ -59,7 +59,7 @@ glmnet.wrapper <- function(y, x, newx=NULL, newy=NULL, alpha.runs=NULL,
     }
     result$best.alpha      <- alpha.runs[best.alpha]
     result$best.lambda     <- best.lambda
-    result$best.model      <- best.model
+    result$best.model      <- NA
     result$coef            <- coef
     result$n.train         <- length(y)
   } else if (return.type == "model") {

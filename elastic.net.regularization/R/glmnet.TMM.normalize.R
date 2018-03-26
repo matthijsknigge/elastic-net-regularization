@@ -1,9 +1,14 @@
-#' TMM normalize read counts
+#' box plot elastic net
+#' @author Olivier Bakker, Matthijs Knigge
 #'
-#' @return 
+#' @param output.file character name of the outputfile
+#' @param raw.cell.counts character absolute path to raw read counts
+#' @keywords plot
 #' @export
 #' @examples
 #' glmnet.TMM.normalize()
+#' 
+#' 
 glmnet.TMM.normalize <- function(raw.cell.counts, output.file) {
   # libraries
   require(edgeR)

@@ -8,7 +8,6 @@
 #' @examples
 #' glmnet.TMM.normalize()
 #' 
-#' 
 glmnet.TMM.normalize <- function(raw.cell.counts, output.file) {
   # libraries
   require(edgeR)

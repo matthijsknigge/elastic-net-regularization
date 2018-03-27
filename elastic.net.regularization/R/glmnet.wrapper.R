@@ -57,6 +57,8 @@ glmnet.wrapper <- function(y, x, newx=NULL, newy=NULL, alpha.runs=NULL,
       result$n.test       <- length(newy)
       result$mse          <- sum((pred - newy)^2)/length(pred)
     }
+    result$genes.amount    <- length(colnames(x)[grepl(pattern = "rs", x = colnames(x))])
+    result$snps.amount     <- length(colnames(x)[!grepl(pattern = "rs", x = colnames(x))])
     result$best.alpha      <- alpha.runs[best.alpha]
     result$best.lambda     <- best.lambda
     result$best.model      <- best.model

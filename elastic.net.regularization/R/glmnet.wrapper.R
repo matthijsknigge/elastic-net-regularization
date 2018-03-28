@@ -27,7 +27,7 @@ glmnet.wrapper <- function(y, x, newx=NULL, newy=NULL, alpha.runs=NULL,
   models.alpha  <- list()
   alpha.vec     <- c()
   if (is.null(alpha.runs)) {
-    alpha.runs    <- c(0, 0.05, 0.075, 0.1, 0.2, 0.3, 0.4, 0.65, 0.9, 1)
+    alpha.runs    <- c(0.05, 0.075, 0.1, 0.2, 0.3, 0.4, 0.65, 0.9, 1)
   }
   # Loop over the possible alpha values and fit the model
   for (a in 1:length(alpha.runs)) {

@@ -36,7 +36,7 @@ glmnet.bar.plot <- function(identifier, group, before, after, title){
   # create grid
   p <- p + facet_grid(group~., scales = "free", space = "free")
   # bars
-  p <- p + geom_bar(stat="identity", width = .4)
+  p <- p + geom_bar(stat="identity", width = .4, position="dodge")
   # set theme
   p <- p + theme(
     axis.ticks.x=element_blank(),

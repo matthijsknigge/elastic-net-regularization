@@ -75,9 +75,9 @@ glmnet.parse.results <- function(dir, folds, data.y, merge = FALSE, data.c, melt
             pheno.name <- pheno
             
             # amount SNPs as input
-            snps.input  <<- c(snps.input, length(model$input[grepl(pattern = "rs", x = model$input)]))
+            snps.input  <<- c(snps.input, model$genes.amount)
             # amount of genes as input
-            genes.input <<- c(genes.input, length(model$input[!grepl(pattern = "rs", x = model$input)]))
+            genes.input <<- c(genes.input, model$snps.amount)
             # amount of SNPs used in model
             snps.output <<- c(snps.output, length(names(model$coef)[grepl(pattern = "rs", x = names(model$coef))]))
             # amount of genes used in model

@@ -4,15 +4,11 @@
 \alias{glmnet.grid.plot}
 \title{plot elastic net}
 \usage{
-glmnet.grid.plot(p.1, p.2, p.3, p.4, p.5, x.lab, title, save = FALSE,
-  return = FALSE, path, width = 10, height = 10)
+glmnet.grid.plot(plot.list, x.lab, title, save = FALSE, return = FALSE,
+  path, width = 10, height = 10)
 }
 \arguments{
-\item{p.1}{ggplot object}
-
-\item{p.2}{ggplot object}
-
-\item{p.3}{ggplot object}
+\item{plot.list}{list, ggplot objects}
 
 \item{x.lab}{vector character names of x-axis}
 

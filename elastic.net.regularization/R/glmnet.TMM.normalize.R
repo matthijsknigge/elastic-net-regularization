@@ -8,19 +8,13 @@
 #' @examples
 #' glmnet.TMM.normalize()
 #' 
-glmnet.TMM.normalize <- function(raw.cell.counts, output.file) {
+glmnet.TMM.normalize <- function(raw.cell.counts) {
   # libraries
   require(edgeR)
   require(data.table)
 
-
-  countsFile=raw.cell.counts
-  normOut=output.file
-
   # pre parse table to apptropriate format
-  table           <- fread(countsFile, data.table=F)
-  rownames(table) <- table[,1]
-  table           <- table[,-1]
+  table           <- raw.cell.counts
   D               <- DGEList(counts=table)
   # Remove low expressed genes 500FG SPECIFIC
 
@@ -39,10 +33,11 @@ glmnet.TMM.normalize <- function(raw.cell.counts, output.file) {
   scal.mat      <- outer(rep(1,nrow(d$counts)), scalar)
   scaled.counts <- d$counts/scal.mat
 
-  write.table(t(scaled.counts), file = normOut, sep = "\t", row.names=TRUE, quote=FALSE, col.names = NA)
+  # return scaled counts
+  return(list(scaled.counts = scaled.counts))
 }
 
-
+write.table(x = a, file = "gene.expression.txt", quote = F, row.names = F, col.names = T)
 
 
 

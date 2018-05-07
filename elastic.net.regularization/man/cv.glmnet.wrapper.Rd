@@ -23,5 +23,5 @@ Add together two numbers.
 cv.glmnet.wrapper()
 }
 \author{
-Olivier
+Olivier Bakker, Raul Aguirre, Matthijs Knigge, Twan Spenkelink
 }

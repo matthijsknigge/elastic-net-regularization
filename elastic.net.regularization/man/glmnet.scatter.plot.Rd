@@ -4,14 +4,16 @@
 \alias{glmnet.scatter.plot}
 \title{Scatter plots}
 \usage{
-glmnet.scatter.plot(x, y, title)
+glmnet.scatter.plot(x, y, title, sub.title)
 }
 \arguments{
 \item{x}{numeric vector. Mean correlation of interaction between immune phenotypes and genes}
 
 \item{y}{numeric vector. Mean correlation of interaction between immune phenotypes and genes + genetics}
 
-\item{title}{character. Title of the plot}
+\item{title}{character. Title of plot}
+
+\item{sub.itle}{character. Title of the plot}
 }
 \value{
 

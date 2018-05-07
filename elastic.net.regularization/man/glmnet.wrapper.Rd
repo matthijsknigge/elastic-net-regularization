@@ -23,5 +23,5 @@ Wrapper for Elastic Net
 glmnet.wrapper()
 }
 \author{
-Matthijs Knigge
+Olivier Bakker, Raul Aguirre, Matthijs Knigge, Twan Spenkelink
 }

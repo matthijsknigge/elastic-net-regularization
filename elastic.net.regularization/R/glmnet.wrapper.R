@@ -1,6 +1,6 @@
 #' Wrapper for Elastic Net
 #' 
-#' @author Matthijs Knigge
+#' @author Olivier Bakker, Raul Aguirre, Matthijs Knigge, Twan Spenkelink
 #' @param y a vector of outcomes.
 #' @param x matrix
 #' @return Elastic Net Results

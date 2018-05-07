@@ -1,6 +1,6 @@
 #' Add together two numbers.
 #'
-#' @author Olivier
+#' @author Olivier Bakker, Raul Aguirre, Matthijs Knigge, Twan Spenkelink
 #' @param x x matrix
 #' @param y a vector of outcomes.
 #' @param k an integer for the number of folds.

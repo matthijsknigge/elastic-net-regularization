@@ -4,7 +4,7 @@
 \alias{glmnet.TMM.normalize}
 \title{box plot elastic net}
 \usage{
-glmnet.TMM.normalize(raw.cell.counts, output.file)
+glmnet.TMM.normalize(raw.cell.counts)
 }
 \arguments{
 \item{raw.cell.counts}{character absolute path to raw read counts}

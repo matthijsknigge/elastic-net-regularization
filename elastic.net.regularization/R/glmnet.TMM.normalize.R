@@ -37,7 +37,6 @@ glmnet.TMM.normalize <- function(raw.cell.counts) {
   return(list(scaled.counts = scaled.counts))
 }
 
-write.table(x = a, file = "gene.expression.txt", quote = F, row.names = F, col.names = T)
 
 
 

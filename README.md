@@ -2,4 +2,4 @@
 
 
 
-![alt-text-1](internship/readme/readme.png) 
+![alt-text-1](readme/readme.png) 
